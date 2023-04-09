@@ -4,6 +4,14 @@ on:
     types: #[opened, reopened]
       - opened
   workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+      - 'dev-*' # dev-new, dev-abc
+      - 'f/**' # f/dev , f/dev/1, fe/dev/1/a
+    paths-ignore:    # Also we can use paths instead of path ignore
+      - ".github/workflows/*"  
+  
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -12,8 +20,10 @@ jobs:
         run: echo "${{ toJSON(github.event) }}"
       - name: Get code
         uses: actions/checkout@v3
-      # - name: Install dependencies
-      #   run: npm ci
+      - name: Install dependencies
+        run: |
+          cd 01-Starting-Project/
+          npm ci
       # - name: Test code
       #   run: npm run test
       # - name: Build code
