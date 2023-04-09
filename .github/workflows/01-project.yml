@@ -1,4 +1,4 @@
-name: test-project
+name: 01-project
 on: 
   push:
     branches:
@@ -26,6 +26,7 @@ jobs:
           pwd
           cd 01-Starting-Project/
           npm ci
+
       - name: Run tests
         run: |
           pwd
