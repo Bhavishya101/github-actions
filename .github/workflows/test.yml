@@ -22,9 +22,15 @@ jobs:
           cache-dependency-path: src/package-lock.json
 
       - name: Install Dependencies
-        run: npm ci
+        run: |
+          pwd
+          cd /01-Starting-Project
+          npm ci
       - name: Run tests
-        run: npm test
+        run: |
+          pwd
+          cd /01-Starting-Project
+          npm test
 
 
 
