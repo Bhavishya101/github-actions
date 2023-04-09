@@ -6,7 +6,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest  
-
     ## Steps for the Node. Js Code to run
     steps:
       - name: Get Code from the repository
@@ -14,24 +13,49 @@ jobs:
         # with:
         #   repository: Bhavishya101/github-actions
         #   path: 01-Starting-Project
-
       - name: Install NodeJS 
         uses: actions/setup-node@v3
         with: 
           node-version: 18
           cache-dependency-path: src/package-lock.json
-
       - name: Install Dependencies
         run: |
           pwd
           cd 01-Starting-Project/
           npm ci
-
       - name: Run tests
         run: |
           pwd
           cd 01-Starting-Project/
           npm test
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code from the repository
+        uses: actions/checkout@v3
+        # with:
+        #   repository: Bhavishya101/github-actions
+        #   path: 01-Starting-Project
+      - name: Install NodeJS 
+        uses: actions/setup-node@v3
+        with: 
+          node-version: 18
+          cache-dependency-path: src/package-lock.json
+      - name: Install Dependencies
+        run: |
+          cd 01-Starting-Project/
+          npm ci
+      - name: Build Project
+        run: |
+          cd 01-Starting-Project/
+          npm run build       
+      - name: Deploy 
+        run: |
+          cd 01-Starting-Project/
+          echo "Deploying ......... "
+        
+
 
 
 
