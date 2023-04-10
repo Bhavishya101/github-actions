@@ -1,0 +1,100 @@
+name: Website Deploymentv1
+on:
+  push:
+    branches:
+      - main
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          cd 04-Starting-Project/
+          npm ci
+      - name: Lint code
+        run: |
+          cd 04-Starting-Project/
+          npm run lint
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: |
+          cd 04-Starting-Project/
+          npm ci
+      - name: Test code
+        continue-on-error: true  # Next step will continure
+        id: run-test
+        run: |
+          cd 04-Starting-Project/
+          npm run test
+      - name: Upload test report
+        #if: ${{ failure() && steps.run-test.outcome == 'failure' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: 04-Starting-Project/test.json
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: |
+          cd 04-Starting-Project/
+          npm ci
+      - name: Build website
+        id: build-website
+        run: |
+          cd 04-Starting-Project/
+          npm run build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: 04-Starting-Project/dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+      - name: Output contents
+        run: ls
+      - name: Deploy
+        run: echo "Deploying..."
+  report:
+    needs: [lint, deploy]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information
+        run:  |
+          echo "Something went wrong"
+          echo "${{ tojson(github) }}"
