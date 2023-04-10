@@ -39,11 +39,12 @@ jobs:
           cd 04-Starting-Project/
           npm ci
       - name: Test code
+        id: run-test
         run: |
           cd 04-Starting-Project/
           npm run test
       - name: Upload test report
-        #if: 
+        if: ${{ steps.run-test.outcome == 'failure' }}
         uses: actions/upload-artifact@v3
         with:
           name: test-report
