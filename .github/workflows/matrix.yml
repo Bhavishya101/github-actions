@@ -1,0 +1,28 @@
+name: Matrix Demo
+on: push
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [12, 14, 16]
+        Operating-system: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.Operating-system }}
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matix.node-version}}
+      - name: Install Dependencies
+        run:  |
+          cd 04-Starting-Project/
+          npm ci
+      - name: Build Project
+        run:  |
+          cd 04-Starting-Project/
+          npm run build
+
+
+
+## Scenarios where you want to build on diffrent node versions
