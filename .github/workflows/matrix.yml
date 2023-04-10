@@ -7,6 +7,9 @@ jobs:
       matrix:
         node-version: [12, 14, 16]
         Operating-system: [ubuntu-latest, windows-latest]
+        include: #  Additional Single Combination
+          - node-version: 18
+            Operating-system: ubuntu-latest
     runs-on: ${{ matrix.Operating-system }}
     steps:
       - name: Get Code
