@@ -1,9 +1,9 @@
 name: Deployment
-on:
-  push:
-    branches:
-      - main
-      - dev
+on: [workflow_dispatch] 
+  # push:            Commenting this portion , as the testing is done.
+  #   branches:
+  #     - main
+  #     - dev
 env:
   MONGODB_DB_NAME: mongodb
 jobs:
