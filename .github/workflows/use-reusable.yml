@@ -80,7 +80,8 @@ jobs:
     needs: build
     #runs-on: ubuntu-latest
     uses: ./.github/workflows/reusable.yml
-
+    with:
+      artifact-name: dist-files
   report:
     needs: [lint, deploy]
     if: failure()
